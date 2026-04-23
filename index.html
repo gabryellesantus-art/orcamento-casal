@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Orçamento do Casal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;--surface3:#e4e2d8;
+  --border:#e2e0d8;--border2:#cccac0;
+  --text:#1a1a18;--text2:#6b6a63;--text3:#9b9a92;
+  --green:#2d6a4f;--green-bg:#d8f3dc;
+  --red:#9b2226;--red-bg:#fde8e8;
+  --blue:#1d4e89;--blue-bg:#dbeafe;
+  --amber:#92400e;--amber-bg:#fef3c7;
+  --purple:#4c1d95;--purple-bg:#ede9fe;
+  --gray-bg:#eeede8;
+  --renda-bg:#fff8e1;--renda-border:#f59e0b;--renda-text:#78350f;
+  --r:12px;--rs:7px;
+}
+[data-theme="dark"]{
+  --bg:#0f0f0e;--surface:#1c1c1a;--surface2:#242422;--surface3:#2c2c29;
+  --border:#2e2e2b;--border2:#3e3e3a;
+  --text:#e8e7e0;--text2:#8a8980;--text3:#5a5a55;
+  --green:#4ade80;--green-bg:#0e2318;
+  --red:#f87171;--red-bg:#2a1212;
+  --blue:#60a5fa;--blue-bg:#0f1e33;
+  --amber:#fbbf24;--amber-bg:#271a06;
+  --purple:#a78bfa;--purple-bg:#160f2a;
+  --gray-bg:#242422;
+  --renda-bg:#1c1a0a;--renda-border:#b45309;--renda-text:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* TOP BAR */
+.topbar{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:54px}
+.topbar-brand{display:flex;align-items:center;gap:8px}
+.topbar-title{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.topbar-sub{font-size:11px;color:var(--text3)}
+.topbar-right{display:flex;gap:6px}
+.tbtn{background:none;border:1px solid var(--border2);border-radius:8px;cursor:pointer;color:var(--text2);padding:6px 11px;font-size:13px;font-family:'DM Sans',sans-serif;transition:background .15s;white-space:nowrap}
+.tbtn:hover,.tbtn:active{background:var(--surface2)}
+
+/* MONTH NAV */
+.month-bar{background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.mb-btn{background:none;border:none;cursor:pointer;color:var(--text2);font-size:22px;padding:10px 22px;line-height:1;transition:color .15s}
+.mb-btn:hover{color:var(--text)}
+.mb-btn:active{transform:scale(.88)}
+.mb-label{font-size:15px;font-weight:600;min-width:165px;text-align:center;letter-spacing:-.2px}
+
+/* TABS */
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:12px 14px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+
+/* MAIN */
+.main{max-width:800px;margin:0 auto;padding:14px 12px 80px}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--surface2);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;gap:8px}
+.ch:active{background:var(--surface3)}
+.ct{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text2)}
+.cv{font-size:14px;font-weight:600;font-family:'DM Mono',monospace}
+.caret{font-size:10px;color:var(--text3);transition:transform .2s;margin-left:4px}
+.collapsed .caret{transform:rotate(-90deg)}
+.collapsed .cb{display:none}
+.collapsed .ch{border-bottom:none}
+
+/* ROW */
+.row{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);gap:8px;min-height:42px}
+.row:last-child{border-bottom:none}
+.rv{font-size:11px;color:var(--text3);width:20px;text-align:center;flex-shrink:0}
+.rn{flex:1;min-width:0}
+.rl{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rs{font-size:11px;color:var(--text3);margin-top:1px}
+.rval{font-size:13px;font-weight:500;font-family:'DM Mono',monospace;min-width:76px;text-align:right;flex-shrink:0}
+.ract{display:flex;gap:2px;flex-shrink:0}
+.ibtn{background:none;border:none;cursor:pointer;font-size:14px;color:var(--text3);padding:5px;border-radius:5px;min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center}
+.ibtn:hover{background:var(--surface2);color:var(--red)}
+
+/* BADGE */
+.badge{display:inline-flex;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:.3px}
+.b-casa{background:var(--blue-bg);color:var(--blue)}
+.b-gaby{background:var(--green-bg);color:var(--green)}
+.b-fabi{background:var(--amber-bg);color:var(--amber)}
+.b-emp{background:var(--gray-bg);color:var(--text2)}
+.b-fix{background:var(--purple-bg);color:var(--purple)}
+
+/* RENDA ROW HIGHLIGHT */
+.rendrow{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);min-height:44px;background:var(--renda-bg);border-left:3px solid var(--renda-border)}
+.rendrow:last-child{border-bottom:none}
+.rendlbl{flex:1;font-size:13px;font-weight:500;color:var(--renda-text)}
+
+/* INLINE INPUTS */
+.ii{font-size:13px;font-family:'DM Mono',monospace;padding:4px 7px;border:1px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);text-align:right;-moz-appearance:textfield}
+.ii:focus{outline:none;border-color:var(--blue)}
+.ii::-webkit-inner-spin-button,.ii::-webkit-outer-spin-button{-webkit-appearance:none}
+.it{font-size:13px;padding:4px 7px;border:1px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;width:100%}
+.it:focus{outline:none;border-color:var(--blue)}
+
+/* ADD FORM */
+.addform{padding:10px 14px;border-top:1px dashed var(--border2);background:var(--surface2);display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.addform label{font-size:11px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px}
+.addform input,.addform select{font-size:13px;font-family:'DM Sans',sans-serif;padding:7px 9px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);color:var(--text);outline:none;min-height:34px}
+.addform input:focus,.addform select:focus{border-color:var(--blue)}
+.fn{flex:1;min-width:110px}.fn input{width:100%}
+.fv input{width:86px}
+.fvc input{width:52px}
+.fp input{width:52px}
+.fo select{width:90px}
+.addbtn{background:var(--text);color:var(--bg);border:none;border-radius:var(--rs);padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;min-height:34px;white-space:nowrap}
+.addbtn:active{opacity:.8}
+
+/* SECTION LABEL */
+.slabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);padding:7px 14px 2px;background:var(--surface)}
+
+/* METRICS */
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+@media(max-width:400px){.mgrid{grid-template-columns:1fr 1fr}}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 13px}
+.mlbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px}
+.mval{font-size:18px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:-.5px;word-break:break-all}
+.mval.pos{color:var(--green)}.mval.neg{color:var(--red)}
+.msub{font-size:10px;color:var(--text3);margin-top:3px}
+
+/* SPLIT */
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.stitle{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:10px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.srow:last-child{border-bottom:none}
+.srow.renda-row{background:var(--renda-bg);padding:7px 8px;border-radius:6px;margin:2px 0;border-left:3px solid var(--renda-border)}
+.srow.renda-row .sname{color:var(--renda-text);font-weight:600}
+.srow.renda-row .sval{color:var(--renda-text);font-weight:600}
+.sname{color:var(--text2);padding-right:8px}
+.sval{font-family:'DM Mono',monospace;font-weight:500;flex-shrink:0}
+.shi{background:var(--surface2);border-radius:var(--rs);padding:9px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.shi .lbl{font-size:13px;font-weight:600}
+.shi .vl{font-size:15px;font-weight:600;font-family:'DM Mono',monospace}
+.vpos{color:var(--green)}.vneg{color:var(--red)}
+
+/* NOTE */
+.note{font-size:12px;color:var(--text3);padding:8px 14px;background:var(--surface2);border-top:1px dashed var(--border2);font-style:italic}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:540px){.overlay{align-items:center}}
+.modal{background:var(--surface);border-radius:16px 16px 0 0;width:100%;max-width:460px;padding:20px 18px;max-height:92vh;overflow-y:auto}
+@media(min-width:540px){.modal{border-radius:var(--r)}}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:16px}
+.mfield{margin-bottom:12px}
+.mfield label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:4px}
+.mfield input,.mfield select{width:100%;font-size:15px;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;outline:none;min-height:44px}
+.mfield input:focus,.mfield select:focus{border-color:var(--blue)}
+.mbtns{display:flex;gap:8px;margin-top:16px}
+.mbtn-p{flex:1;background:var(--text);color:var(--bg);border:none;border-radius:var(--rs);padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;min-height:44px}
+.mbtn-s{background:none;border:1px solid var(--border2);border-radius:var(--rs);padding:12px 16px;font-size:15px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;min-height:44px}
+
+/* CARTÃO ESTRUTURA */
+.cart-section{margin:0;padding:8px 14px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);background:var(--surface2);border-top:1px solid var(--border)}
+.cart-section.fabi-section{color:var(--amber);background:var(--amber-bg);opacity:.8}
+.subtotal-bar{background:var(--green-bg);border-top:2px solid var(--green);padding:9px 14px;display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.subtotal-bar .lbl{color:var(--green)}
+.subtotal-bar .vl{font-family:'DM Mono',monospace;color:var(--green)}
+.total-bar{background:var(--surface2);border-top:2px solid var(--border2);padding:9px 14px;display:flex;justify-content:space-between;font-size:14px;font-weight:700}
+.total-bar .vl{font-family:'DM Mono',monospace;color:var(--red)}
+
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:480px){.dash-grid{grid-template-columns:1fr}}
+.dash-metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.dash-mlbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:6px}
+.dash-mval{font-size:22px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:-.5px}
+.dash-msub{font-size:11px;color:var(--text3);margin-top:4px}
+.dash-chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;overflow-x:auto}
+.dash-chart-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:12px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px;padding-bottom:24px;min-width:340px;position:relative}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:opacity .2s;cursor:pointer;min-height:2px}
+.bar:hover{opacity:.75}
+.bar-label{font-size:9px;color:var(--text3);margin-top:4px;text-align:center;white-space:nowrap}
+.bar-val{font-size:9px;font-family:'DM Mono',monospace;color:var(--text2);position:absolute;top:-14px;white-space:nowrap;transform:translateX(-50%);left:50%}
+.dash-table{width:100%;border-collapse:collapse;font-size:13px}
+.dash-table th{text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);padding:6px 10px;border-bottom:2px solid var(--border)}
+.dash-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.dash-table tr:last-child td{border-bottom:none}
+.dash-table .mono{font-family:'DM Mono',monospace;font-size:12px}
+.dash-table .pos{color:var(--green)}.dash-table .neg{color:var(--red)}
+.dash-table tr:hover td{background:var(--surface2)}
+.dash-select{font-size:13px;font-family:'DM Sans',sans-serif;padding:6px 10px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);color:var(--text);outline:none;cursor:pointer}
+.dash-select:focus{border-color:var(--blue)}
+.dash-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.highlight-row td{background:var(--renda-bg)!important;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <span style="font-size:20px">💑</span>
+    <div>
+      <div class="topbar-title">Orçamento do Casal</div>
+      <div class="topbar-sub">Gaby &amp; Fabi</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="tbtn" onclick="toggleTheme()" id="theme-btn">🌙 Escuro</button>
+  </div>
+</div>
+
+<div class="month-bar">
+  <button class="mb-btn" onclick="cm(-1)">&#8592;</button>
+  <div class="mb-label" id="mlabel"></div>
+  <button class="mb-btn" onclick="cm(1)">&#8594;</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="setTab(0,this)">📋 Resumo</button>
+  <button class="tab" onclick="setTab(1,this)">💳 Cartão Gaby</button>
+  <button class="tab" onclick="setTab(2,this)">💳 Cartão Fabi</button>
+  <button class="tab" onclick="setTab(3,this)">📊 Dashboard</button>
+</div>
+
+<div class="main">
+  <div id="t0"></div>
+  <div id="t1" style="display:none"></div>
+  <div id="t2" style="display:none"></div>
+  <div id="t3" style="display:none"></div>
+</div>
+
+<div class="overlay" id="overlay" style="display:none" onclick="closeOv(event)">
+  <div class="modal" id="mbox"></div>
+</div>
+
+<script>
+const MN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const SK='orca_v5';
+const MIN_YEAR=2026; // Dados apenas a partir de jan/2026
+const R=v=>'R$ '+Math.abs(Number(v)||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const mk=(y,m)=>`${y}-${String(m+1).padStart(2,'0')}`;
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function initData(){
+  return{
+    cy:2026,cm_:0, theme:'light',
+    fixed:[
+      {id:'pf',  label:'Plano Funerário',venc:1, owner:'casa',valor:23.2},
+      {id:'gas', label:'Gasolina',        venc:1, owner:'casa',valor:145},
+      {id:'gs2', label:'Gás',             venc:1, owner:'casa',valor:19.16},
+      {id:'vivo',label:'Vivo',            venc:7, owner:'casa',valor:55},
+      {id:'pos', label:'Pós',             venc:8, owner:'gaby',valor:160.56},
+      {id:'alug',label:'Aluguel',         venc:10,owner:'casa',valor:985},
+      {id:'inet',label:'Internet',        venc:10,owner:'casa',valor:39.95},
+      {id:'luz', label:'Luz',             venc:20,owner:'casa',valor:75},
+      {id:'par', label:'Parcela AP',      venc:20,owner:'casa',valor:835.41},
+    ],
+    // cfixG: fixas do cartão Gaby — "minha" = só Gaby; "compartilhado" = divide com Fabi
+    cfixG:[
+      {id:'sg1',label:'Sócio',       valor:240,  owner:'compartilhado'},
+      {id:'sg2',label:'Spotify',     valor:27.9, owner:'compartilhado'},
+      {id:'sg3',label:'Amazon',      valor:19.9, owner:'gaby'},
+      {id:'sg4',label:'Netflix',     valor:20.9, owner:'compartilhado'},
+      {id:'sg5',label:'Seguro Moto', valor:65.36,owner:'gaby'},
+      {id:'sg6',label:'Seguro Carro',valor:129.92,owner:'gaby'},
+      {id:'sg7',label:'Globo Play',  valor:7.45, owner:'gaby'},
+    ],
+    cfixF:[
+      {id:'sf1',label:'Sócio',  valor:120,  owner:'fabi'},
+      {id:'sf2',label:'Spotify',valor:13.95,owner:'fabi'},
+      {id:'sf3',label:'Netflix',valor:10.45,owner:'fabi'},
+    ],
+    months:{}
+  };
+}
+
+let S;
+try{S=JSON.parse(localStorage.getItem(SK));if(!S||!S.fixed)S=initData();}catch(e){S=initData();}
+if(!S.cy||S.cy<MIN_YEAR)S.cy=MIN_YEAR;
+if(S.cm_===undefined)S.cm_=0;
+if(!S.theme)S.theme='light';
+
+// Migrar owner antigo (casa → compartilhado para cfixG)
+S.cfixG.forEach(f=>{if(f.owner==='casa')f.owner='compartilhado';});
+
+function save(){localStorage.setItem(SK,JSON.stringify(S));}
+
+function gmd(y,m){
+  const k=mk(y,m);
+  if(!S.months[k])S.months[k]={salG:0,salF:0,alugAP:0,ov:{},exG:[],exF:[],cG:{cp:[],vr:[],em:[]},cF:{cp:[],vr:[],em:[]}};
+  const d=S.months[k];
+  ['cG','cF'].forEach(c=>{if(!d[c])d[c]={cp:[],vr:[],em:[]};['cp','vr','em'].forEach(k2=>{if(!d[c][k2])d[c][k2]=[];});});
+  if(!d.exG)d.exG=[];if(!d.exF)d.exF=[];if(!d.ov)d.ov={};
+  return d;
+}
+
+// THEME
+function toggleTheme(){S.theme=S.theme==='dark'?'light':'dark';save();applyTheme();}
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',S.theme||'light');
+  document.getElementById('theme-btn').textContent=S.theme==='dark'?'☀️ Claro':'🌙 Escuro';
+}
+
+// NAV — bloqueia antes de jan/2026
+let CY=S.cy,CM=S.cm_;
+function cm(d){
+  let ny=CY,nm=CM+d;
+  if(nm>11){nm=0;ny++;}
+  if(nm<0){nm=11;ny--;}
+  if(ny<MIN_YEAR||(ny===MIN_YEAR&&nm<0))return;
+  CY=ny;CM=nm;S.cy=CY;S.cm_=CM;save();render();
+}
+
+// TABS
+let AT=0;
+function setTab(i,el){
+  AT=i;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['t0','t1','t2','t3'].forEach((id,x)=>document.getElementById(id).style.display=x===i?'':'none');
+  if(i===3)renderDash();
+}
+
+// PARCEL
+function pval(c,y,m){const si=c.sy*12+c.sm,ci=y*12+m,d=ci-si;return(d<0||d>=c.n)?0:c.total/c.n;}
+
+// ── CALC CARD (com separação minha/fabi) ──────────────────────────────────────
+// Para cartão Gaby:
+//   owner='gaby' → só entra no subtotal dela
+//   owner='compartilhado' → divide ao meio: metade subtotal, metade "parte Fabi"
+// Para cartão Fabi: tratamento normal (tudo é dela)
+function calcCGaby(cd, fl, y, m){
+  let ftMinha=0, ftFabi=0;
+  fl.forEach(f=>{
+    const v=f.valor||0;
+    if(f.owner==='compartilhado'){ftMinha+=v/2;ftFabi+=v/2;}
+    else{ftMinha+=v;} // owner='gaby'
+  });
+
+  // parceladas: mesma lógica de split
+  let ptMinha=0, ptFabi=0;
+  const allCompras=[];
+  Object.values(S.months).forEach(md=>{
+    (md.cG&&md.cG.cp||[]).forEach(c=>{
+      const v=pval(c,y,m);
+      if(v>0)allCompras.push({...c,_v:v});
+    });
+  });
+  allCompras.forEach(c=>{
+    const v=c._v;
+    if(c.split){ptMinha+=v/2;ptFabi+=v/2;}
+    else{ptMinha+=v;}
+  });
+
+  const vt=(cd.vr||[]).reduce((s,v)=>s+(v.valor||0),0);
+  const et=(cd.em||[]).reduce((s,v)=>s+(v.valor||0),0);
+  const subtotal=ftMinha+ptMinha+vt;
+  const totalFatura=subtotal+ftFabi+ptFabi+et;
+  return{ftMinha,ftFabi,ptMinha,ptFabi,vt,et,subtotal,totalFatura,allCompras};
+}
+
+function calcCNormal(cd,fl,y,m){
+  const ft=fl.reduce((s,f)=>s+(f.valor||0),0);
+  let pt=0;
+  const allCompras=[];
+  Object.values(S.months).forEach(md=>{
+    const clist=cd===null?null:md.cF;
+    if(!clist)return;
+    (clist.cp||[]).forEach(c=>{
+      const v=pval(c,y,m);
+      if(v>0)allCompras.push({...c,_v:v});
+    });
+  });
+  allCompras.forEach(c=>pt+=c._v);
+  const vt=(cd.vr||[]).reduce((s,v)=>s+(v.valor||0),0);
+  const et=(cd.em||[]).reduce((s,v)=>s+(v.valor||0),0);
+  return{ft,pt,vt,et,subtotal:ft+pt+vt,totalFatura:ft+pt+vt+et,allCompras};
+}
+
+// CALC SUMMARY
+function calcS(y,m){
+  const d=gmd(y,m);
+  const cg=calcCGaby(d.cG,S.cfixG,y,m);
+  const cf=calcCNormal(d.cF,S.cfixF,y,m);
+
+  let fCasa=0,fGaby=0,fFabi=0;
+  S.fixed.forEach(f=>{
+    const v=d.ov[f.id]!==undefined?d.ov[f.id]:f.valor;
+    if(f.owner==='casa')fCasa+=v;else if(f.owner==='gaby')fGaby+=v;else fFabi+=v;
+  });
+  (d.exG||[]).forEach(e=>fGaby+=e.valor||0);
+  (d.exF||[]).forEach(e=>fFabi+=e.valor||0);
+
+  const rG=(d.salG||0)+(d.alugAP||0)/2;
+  const rF=(d.salF||0)+(d.alugAP||0)/2;
+  const rT=rG+rF;
+
+  // Gasto Gaby = metade fixas casa + pessoais + subtotal cartão (sem parte Fabi, sem emprestado)
+  const tG=fCasa/2+fGaby+cg.subtotal;
+  const tF=fCasa/2+fFabi+cf.subtotal;
+  const tT=fCasa+fGaby+fFabi+cg.totalFatura+cf.totalFatura;
+
+  return{fCasa,fGaby,fFabi,cg,cf,rG,rF,rT,tG,tF,tT,sG:rG-tG,sF:rF-tF,sT:rT-tT};
+}
+
+// BADGE
+function bdg(o){
+  const m={casa:'b-casa',gaby:'b-gaby',fabi:'b-fabi',emprestado:'b-emp',compartilhado:'b-casa'};
+  const l={casa:'Casa',gaby:'Gaby',fabi:'Fabi',emprestado:'Emprest.',compartilhado:'½ Gaby+Fabi'};
+  return`<span class="badge ${m[o]||'b-casa'}">${l[o]||o}</span>`;
+}
+
+// TOGGLE CARD
+function tc(id){const el=document.getElementById(id);if(el)el.classList.toggle('collapsed');}
+
+// MODAL
+function openM(html){document.getElementById('mbox').innerHTML=html;document.getElementById('overlay').style.display='flex';setTimeout(()=>{const f=document.querySelector('#mbox input');if(f)f.focus();},80);}
+function closeM(){document.getElementById('overlay').style.display='none';}
+function closeOv(e){if(e.target.id==='overlay')closeM();}
+
+// ── MODALS ──────────────────────────────────────────────────────────────────
+function modalAddFixed(){
+  openM(`<h3>➕ Nova Conta Fixa</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:12px">Será adicionada em todos os meses a partir de agora.</p>
+    <div class="mfield"><label>Descrição</label><input id="mf_l" placeholder="Ex: Condomínio"></div>
+    <div class="mfield"><label>Valor (R$)</label><input id="mf_v" type="number" step="0.01" placeholder="0,00"></div>
+    <div class="mfield"><label>Dia de vencimento</label><input id="mf_d" type="number" min="1" max="31" placeholder="10"></div>
+    <div class="mfield"><label>Pertence a</label><select id="mf_o"><option value="casa">Casa (divide ao meio)</option><option value="gaby">Gaby</option><option value="fabi">Fabi</option></select></div>
+    <div class="mbtns">
+      <button class="mbtn-s" onclick="closeM()">Cancelar</button>
+      <button class="mbtn-p" onclick="doAddFixed()">Adicionar</button>
+    </div>`);
+}
+function doAddFixed(){
+  const l=document.getElementById('mf_l').value.trim();
+  const v=parseFloat(document.getElementById('mf_v').value)||0;
+  const d=parseInt(document.getElementById('mf_d').value)||1;
+  const o=document.getElementById('mf_o').value;
+  if(!l)return;
+  S.fixed.push({id:uid(),label:l,venc:d,owner:o,valor:v});
+  save();closeM();renderT0();
+}
+
+function modalEditFixed(id){
+  const f=S.fixed.find(x=>x.id===id);if(!f)return;
+  openM(`<h3>✏️ Editar Conta Fixa</h3>
+    <div class="mfield"><label>Descrição</label><input id="ef_l" value="${esc(f.label)}"></div>
+    <div class="mfield"><label>Valor padrão (R$)</label><input id="ef_v" type="number" step="0.01" value="${f.valor}"></div>
+    <div class="mfield"><label>Dia de vencimento</label><input id="ef_d" type="number" min="1" max="31" value="${f.venc}"></div>
+    <div class="mfield"><label>Pertence a</label><select id="ef_o">
+      <option value="casa" ${f.owner==='casa'?'selected':''}>Casa (divide ao meio)</option>
+      <option value="gaby" ${f.owner==='gaby'?'selected':''}>Gaby</option>
+      <option value="fabi" ${f.owner==='fabi'?'selected':''}>Fabi</option>
+    </select></div>
+    <div class="mbtns">
+      <button class="mbtn-s" onclick="delFixed('${id}')">🗑 Excluir</button>
+      <button class="mbtn-p" onclick="doEditFixed('${id}')">Salvar</button>
+    </div>`);
+}
+function doEditFixed(id){
+  const f=S.fixed.find(x=>x.id===id);if(!f)return;
+  f.label=document.getElementById('ef_l').value.trim()||f.label;
+  f.valor=parseFloat(document.getElementById('ef_v').value)||0;
+  f.venc=parseInt(document.getElementById('ef_d').value)||1;
+  f.owner=document.getElementById('ef_o').value;
+  save();closeM();renderT0();
+}
+function delFixed(id){S.fixed=S.fixed.filter(x=>x.id!==id);save();closeM();renderT0();}
+
+function modalEditCFix(who,id){
+  const list=who==='gaby'?S.cfixG:S.cfixF;
+  const f=list.find(x=>x.id===id);if(!f)return;
+  const isGaby=who==='gaby';
+  openM(`<h3>✏️ Editar Fixa do Cartão</h3>
+    <div class="mfield"><label>Descrição</label><input id="ecf_l" value="${esc(f.label)}"></div>
+    <div class="mfield"><label>Valor ${isGaby?'total':'(R$)'}</label><input id="ecf_v" type="number" step="0.01" value="${f.valor}"></div>
+    ${isGaby?`<div class="mfield"><label>Divisão</label><select id="ecf_o">
+      <option value="gaby" ${f.owner==='gaby'?'selected':''}>Só Gaby</option>
+      <option value="compartilhado" ${f.owner==='compartilhado'?'selected':''}>Compartilhado (÷2 com Fabi)</option>
+    </select></div>`:`<div class="mfield"><label>Pertence a</label><select id="ecf_o">
+      <option value="fabi" ${f.owner==='fabi'?'selected':''}>Fabi</option>
+    </select></div>`}
+    <div class="mbtns">
+      <button class="mbtn-s" onclick="delCFix('${who}','${id}')">🗑 Excluir</button>
+      <button class="mbtn-p" onclick="doEditCFix('${who}','${id}')">Salvar</button>
+    </div>`);
+}
+function doEditCFix(who,id){
+  const list=who==='gaby'?S.cfixG:S.cfixF;
+  const f=list.find(x=>x.id===id);if(!f)return;
+  f.label=document.getElementById('ecf_l').value.trim()||f.label;
+  f.valor=parseFloat(document.getElementById('ecf_v').value)||0;
+  f.owner=document.getElementById('ecf_o').value;
+  save();closeM();renderCard(who);
+}
+function delCFix(who,id){
+  if(who==='gaby')S.cfixG=S.cfixG.filter(x=>x.id!==id);
+  else S.cfixF=S.cfixF.filter(x=>x.id!==id);
+  save();closeM();renderCard(who);
+}
+
+// ── TAB 0 (RESUMO) ───────────────────────────────────────────────────────────
+function renderT0(){
+  const d=gmd(CY,CM),s=calcS(CY,CM);
+  let h='';
+
+  h+=`<div class="mgrid">
+    <div class="metric"><div class="mlbl">Renda Total</div><div class="mval">${R(s.rT)}</div><div class="msub">Gaby + Fabi</div></div>
+    <div class="metric"><div class="mlbl">Total Gastos</div><div class="mval">${R(s.tG+s.tF+s.fCasa)}</div><div class="msub">Fixos + Cartões</div></div>
+    <div class="metric"><div class="mlbl">Sobra</div><div class="mval ${s.sT>=0?'pos':'neg'}">${(s.sT<0?'- ':'')+R(s.sT)}</div><div class="msub">do mês</div></div>
+  </div>`;
+
+  // RENDA — destacada
+  h+=`<div class="card" id="c-renda"><div class="ch" onclick="tc('c-renda')" style="background:var(--renda-bg);border-bottom-color:var(--renda-border)"><span class="ct" style="color:var(--renda-text)">💰 Renda do Mês</span><span style="display:flex;align-items:center;gap:6px"><span class="cv" style="color:var(--renda-text)">${R(s.rT)}</span><span class="caret" style="color:var(--renda-text)">▾</span></span></div>
+  <div class="cb">
+    <div class="rendrow"><div class="rendlbl">${bdg('gaby')} Salário Gaby</div><input class="ii" type="number" step="0.01" value="${d.salG||0}" style="width:110px" onchange="setRenda('salG',this.value)"></div>
+    <div class="rendrow"><div class="rendlbl">${bdg('fabi')} Salário Fabi</div><input class="ii" type="number" step="0.01" value="${d.salF||0}" style="width:110px" onchange="setRenda('salF',this.value)"></div>
+    <div class="rendrow"><div class="rendlbl">${bdg('casa')} Aluguel AP <span style="font-size:11px;color:var(--renda-text);opacity:.7">(÷ 2 cada)</span></div><input class="ii" type="number" step="0.01" value="${d.alugAP||0}" style="width:110px" onchange="setRenda('alugAP',this.value)"></div>
+  </div></div>`;
+
+  // FIXAS
+  const tFix=s.fCasa+s.fGaby+s.fFabi;
+  h+=`<div class="card" id="c-fix"><div class="ch" onclick="tc('c-fix')"><span class="ct">🏠 Contas Fixas</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(tFix)}</span><span class="caret">▾</span></span></div>
+  <div class="cb">`;
+  S.fixed.forEach(f=>{
+    const val=d.ov[f.id]!==undefined?d.ov[f.id]:f.valor;
+    h+=`<div class="row">
+      <div class="rv">${f.venc}</div>
+      <div class="rn"><div class="rl">${esc(f.label)} <span class="badge b-fix" style="margin-left:4px">Fixo</span></div></div>
+      <div style="flex-shrink:0">${bdg(f.owner)}</div>
+      <input class="ii" type="number" step="0.01" value="${val}" style="width:88px" onchange="setOv('${f.id}',this.value)">
+      <div class="ract"><button class="ibtn" title="Editar" onclick="modalEditFixed('${f.id}')">✏️</button></div>
+    </div>`;
+  });
+  h+=`<div class="slabel">Gastos pessoais — Gaby</div>`;
+  (d.exG||[]).forEach((e,i)=>{
+    h+=`<div class="row"><div class="rv">${e.venc||'—'}</div><div class="rn"><div class="rl">${esc(e.label)}</div></div><div>${bdg('gaby')}</div><div class="rval">${R(e.valor)}</div><div class="ract"><button class="ibtn" onclick="remExG(${i})">✕</button></div></div>`;
+  });
+  h+=addRowHtml('exG');
+  h+=`<div class="slabel">Gastos pessoais — Fabi</div>`;
+  (d.exF||[]).forEach((e,i)=>{
+    h+=`<div class="row"><div class="rv">${e.venc||'—'}</div><div class="rn"><div class="rl">${esc(e.label)}</div></div><div>${bdg('fabi')}</div><div class="rval">${R(e.valor)}</div><div class="ract"><button class="ibtn" onclick="remExF(${i})">✕</button></div></div>`;
+  });
+  h+=addRowHtml('exF');
+  h+=`<div style="padding:9px 14px;border-top:1px solid var(--border);background:var(--surface2)">
+    <button class="addbtn" onclick="modalAddFixed()" style="width:100%;background:var(--surface3);color:var(--text2)">➕ Nova Conta Fixa (aparece em todos os meses)</button>
+  </div>`;
+  h+=`</div></div>`;
+
+  // CARTÕES RESUMO — mostra subtotal Gaby (só a parte dela)
+  h+=`<div class="card" id="c-cart"><div class="ch" onclick="tc('c-cart')"><span class="ct">💳 Cartões — Minha Parte (Gaby)</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(s.cg.subtotal)}</span><span class="caret">▾</span></span></div>
+  <div class="cb">
+    <div class="row"><div class="rn"><div class="rl">Subtotal Gaby</div><div class="rs">Fixas + Parceladas + Variável (só minha parte)</div></div><div class="rval">${R(s.cg.subtotal)}</div></div>
+    <div class="row"><div class="rn"><div class="rl">Parte Fabi no cartão Gaby</div><div class="rs">Não entra no seu total</div></div><div class="rval" style="color:var(--text3)">${R(s.cg.ftFabi+s.cg.ptFabi)}</div></div>
+    <div class="row"><div class="rn"><div class="rl">Emprestado (Gaby)</div><div class="rs">Não entra no seu total</div></div><div class="rval" style="color:var(--text3)">${R(s.cg.et)}</div></div>
+    <div class="row" style="background:var(--surface2)"><div class="rn"><div class="rl" style="font-weight:600">Fatura total cartão Gaby</div><div class="rs">Subtotal + Parte Fabi + Emprestado</div></div><div class="rval" style="color:var(--red);font-weight:700">${R(s.cg.totalFatura)}</div></div>
+    <div style="height:8px"></div>
+    <div class="row"><div class="rn"><div class="rl">Subtotal Fabi</div><div class="rs">Fixas + Parceladas + Variável</div></div><div class="rval">${R(s.cf.subtotal)}</div></div>
+    ${s.cf.et>0?`<div class="row"><div class="rn"><div class="rl">Emprestado (Fabi)</div></div><div class="rval" style="color:var(--text3)">${R(s.cf.et)}</div></div>`:''}
+  </div></div>`;
+
+  // DIVISÃO
+  h+=`<div class="scard"><div class="stitle">⚖️ Divisão do Mês</div>
+    <div class="srow renda-row"><span class="sname">Gaby — renda</span><span class="sval">${R(s.rG)}</span></div>
+    <div class="srow"><span class="sname">Gaby — metade das fixas da casa</span><span class="sval">${R(s.fCasa/2)}</span></div>
+    <div class="srow"><span class="sname">Gaby — gastos pessoais</span><span class="sval">${R(s.fGaby)}</span></div>
+    <div class="srow"><span class="sname">Gaby — subtotal cartão (minha parte)</span><span class="sval">${R(s.cg.subtotal)}</span></div>
+    <div class="shi"><span class="lbl">Sobra Gaby</span><span class="vl ${s.sG>=0?'vpos':'vneg'}">${(s.sG<0?'- ':'')+R(s.sG)}</span></div>
+    <div style="height:10px"></div>
+    <div class="srow renda-row"><span class="sname">Fabi — renda</span><span class="sval">${R(s.rF)}</span></div>
+    <div class="srow"><span class="sname">Fabi — metade das fixas da casa</span><span class="sval">${R(s.fCasa/2)}</span></div>
+    <div class="srow"><span class="sname">Fabi — gastos pessoais</span><span class="sval">${R(s.fFabi)}</span></div>
+    <div class="srow"><span class="sname">Fabi — cartão</span><span class="sval">${R(s.cf.subtotal)}</span></div>
+    <div class="shi"><span class="lbl">Sobra Fabi</span><span class="vl ${s.sF>=0?'vpos':'vneg'}">${(s.sF<0?'- ':'')+R(s.sF)}</span></div>
+  </div>`;
+
+  document.getElementById('t0').innerHTML=h;
+}
+
+function addRowHtml(who){
+  const fn=who==='exG'?'addExG':'addExF';
+  return`<div class="addform">
+    <div class="fn"><label>Descrição</label><input type="text" id="${fn}_l" placeholder="Ex: Farmácia"></div>
+    <div class="fv"><label>Valor (R$)</label><input type="number" step="0.01" id="${fn}_v" placeholder="0,00"></div>
+    <div class="fvc"><label>Venc.</label><input type="number" id="${fn}_d" placeholder="dia" min="1" max="31"></div>
+    <div><label>&nbsp;</label><button class="addbtn" onclick="${fn}()">+ Add</button></div>
+  </div>`;
+}
+
+// ── TAB CARD ─────────────────────────────────────────────────────────────────
+function renderCard(who){
+  const d=gmd(CY,CM);
+  const cd=who==='gaby'?d.cG:d.cF;
+  const fl=who==='gaby'?S.cfixG:S.cfixF;
+  let h='';
+
+  if(who==='gaby'){
+    const calc=calcCGaby(cd,fl,CY,CM);
+
+    // FIXAS CARTÃO — separado minha/fabi
+    const ftotalGaby=fl.filter(f=>f.owner==='gaby').reduce((s,f)=>s+(f.valor||0),0);
+    const ftotalCompart=fl.filter(f=>f.owner==='compartilhado').reduce((s,f)=>s+(f.valor||0),0);
+
+    h+=`<div class="card" id="cc-fix-gaby"><div class="ch" onclick="tc('cc-fix-gaby')"><span class="ct">🔁 Fixas do Cartão Gaby</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(calc.ftMinha+calc.ftFabi)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">`;
+
+    // Minhas fixas
+    const minhas=fl.filter(f=>f.owner==='gaby');
+    const compart=fl.filter(f=>f.owner==='compartilhado');
+    if(minhas.length>0){
+      h+=`<div class="cart-section">Só Gaby</div>`;
+      minhas.forEach(f=>{
+        h+=`<div class="row"><div class="rn"><div class="rl">${esc(f.label)} <span class="badge b-fix">Fixo</span></div></div><div>${bdg('gaby')}</div><div class="rval">${R(f.valor)}</div><div class="ract"><button class="ibtn" onclick="modalEditCFix('gaby','${f.id}')">✏️</button></div></div>`;
+      });
+    }
+    if(compart.length>0){
+      h+=`<div class="cart-section">Compartilhado — dividido ao meio com Fabi</div>`;
+      compart.forEach(f=>{
+        h+=`<div class="row">
+          <div class="rn"><div class="rl">${esc(f.label)} <span class="badge b-fix">Fixo</span></div><div class="rs">Total: ${R(f.valor)} → Minha parte: ${R(f.valor/2)} | Fabi: ${R(f.valor/2)}</div></div>
+          <div>${bdg('compartilhado')}</div>
+          <div class="rval">${R(f.valor)}</div>
+          <div class="ract"><button class="ibtn" onclick="modalEditCFix('gaby','${f.id}')">✏️</button></div>
+        </div>`;
+      });
+    }
+
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="ncf_gaby_l" placeholder="Ex: Disney+"></div>
+      <div class="fv"><label>Valor total (R$)</label><input type="number" step="0.01" id="ncf_gaby_v" placeholder="0,00"></div>
+      <div class="fo"><label>Divisão</label><select id="ncf_gaby_o"><option value="gaby">Só Gaby</option><option value="compartilhado">÷2 com Fabi</option></select></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addCFix('gaby')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // PARCELADAS — separado
+    h+=`<div class="card" id="cc-par-gaby"><div class="ch" onclick="tc('cc-par-gaby')"><span class="ct">🛍️ Parceladas</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(calc.ptMinha+calc.ptFabi)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">`;
+    if(calc.allCompras.length===0)h+=`<div class="note">Nenhuma parcela ativa neste mês.</div>`;
+    const minhasP=calc.allCompras.filter(c=>!c.split);
+    const compartP=calc.allCompras.filter(c=>c.split);
+    if(minhasP.length>0){
+      h+=`<div class="cart-section">Só Gaby</div>`;
+      minhasP.forEach(c=>{
+        const parc=CY*12+CM-(c.sy*12+c.sm)+1;
+        h+=`<div class="row"><div class="rn"><div class="rl">${esc(c.label)}</div><div class="rs">Parcela ${parc}/${c.n} — total ${R(c.total)}</div></div><div class="rval">${R(c._v)}</div><div class="ract"><button class="ibtn" onclick="remCompra('gaby','${c.id}')">✕</button></div></div>`;
+      });
+    }
+    if(compartP.length>0){
+      h+=`<div class="cart-section">Compartilhado (÷2 com Fabi)</div>`;
+      compartP.forEach(c=>{
+        const parc=CY*12+CM-(c.sy*12+c.sm)+1;
+        h+=`<div class="row"><div class="rn"><div class="rl">${esc(c.label)}</div><div class="rs">Parcela ${parc}/${c.n} — parcela total ${R(c._v)} → Minha: ${R(c._v/2)} | Fabi: ${R(c._v/2)}</div></div><div class="rval">${R(c._v)}</div><div class="ract"><button class="ibtn" onclick="remCompra('gaby','${c.id}')">✕</button></div></div>`;
+      });
+    }
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="ncp_gaby_l" placeholder="Ex: Tênis Nike"></div>
+      <div class="fv"><label>Total (R$)</label><input type="number" step="0.01" id="ncp_gaby_v" placeholder="200,00"></div>
+      <div class="fp"><label>Parcelas</label><input type="number" id="ncp_gaby_n" placeholder="4" min="1" max="72"></div>
+      <div class="fo"><label>Divisão</label><select id="ncp_gaby_s"><option value="0">Só Gaby</option><option value="1">÷2 com Fabi</option></select></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addCompra('gaby')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // VARIÁVEL
+    const vtotal=(cd.vr||[]).reduce((s,v)=>s+(v.valor||0),0);
+    h+=`<div class="card" id="cc-vr-gaby"><div class="ch" onclick="tc('cc-vr-gaby')"><span class="ct">📝 Variáveis da Fatura</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(vtotal)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">`;
+    if((cd.vr||[]).length===0)h+=`<div class="note">Nenhum gasto variável adicionado.</div>`;
+    (cd.vr||[]).forEach((v,i)=>{
+      h+=`<div class="row"><div class="rn"><div class="rl">${esc(v.label)}</div></div>${bdg('gaby')}<div class="rval">${R(v.valor)}</div><div class="ract"><button class="ibtn" onclick="remVar('gaby',${i})">✕</button></div></div>`;
+    });
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="nvr_gaby_l" placeholder="Ex: Restaurante"></div>
+      <div class="fv"><label>Valor (R$)</label><input type="number" step="0.01" id="nvr_gaby_v" placeholder="0,00"></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addVar('gaby')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // EMPRESTADO
+    const etotal=(cd.em||[]).reduce((s,v)=>s+(v.valor||0),0);
+    h+=`<div class="card" id="cc-em-gaby"><div class="ch" onclick="tc('cc-em-gaby')"><span class="ct" style="opacity:.7">🤝 Emprestado (não entra no subtotal)</span><span style="display:flex;align-items:center;gap:6px"><span class="cv" style="color:var(--text3)">${R(etotal)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">
+    <div class="note">Estes valores NÃO entram no subtotal nem no resumo. Compõem o total da fatura.</div>`;
+    (cd.em||[]).forEach((v,i)=>{
+      h+=`<div class="row"><div class="rn"><div class="rl">${esc(v.label)}</div></div><div class="rval" style="color:var(--text3)">${R(v.valor)}</div><div class="ract"><button class="ibtn" onclick="remEmp('gaby',${i})">✕</button></div></div>`;
+    });
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="nem_gaby_l" placeholder="Ex: Compra Mãe"></div>
+      <div class="fv"><label>Valor (R$)</label><input type="number" step="0.01" id="nem_gaby_v" placeholder="0,00"></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addEmp('gaby')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // RESUMO CARTÃO GABY
+    h+=`<div class="scard">
+      <div class="stitle">💳 Resumo Cartão Gaby</div>
+      <div class="srow"><span class="sname">Minhas fixas</span><span class="sval">${R(calc.ftMinha)}</span></div>
+      <div class="srow"><span class="sname">Minhas parceladas</span><span class="sval">${R(calc.ptMinha)}</span></div>
+      <div class="srow"><span class="sname">Variáveis (minhas)</span><span class="sval">${R(calc.vt)}</span></div>
+      <div class="subtotal-bar"><span class="lbl">✅ Subtotal (minha parte)</span><span class="vl">${R(calc.subtotal)}</span></div>
+      <div style="height:6px"></div>
+      <div class="srow" style="color:var(--text3)"><span class="sname">Parte Fabi (fixas compartilhadas)</span><span class="sval">${R(calc.ftFabi)}</span></div>
+      <div class="srow" style="color:var(--text3)"><span class="sname">Parte Fabi (parceladas compartilhadas)</span><span class="sval">${R(calc.ptFabi)}</span></div>
+      <div class="srow" style="color:var(--text3)"><span class="sname">Emprestado</span><span class="sval">${R(calc.et)}</span></div>
+      <div class="total-bar"><span>Total Fatura</span><span class="vl">${R(calc.totalFatura)}</span></div>
+    </div>`;
+
+  } else {
+    // ── CARTÃO FABI (normal) ──
+    const calc=calcCNormal(cd,fl,CY,CM);
+    const ftotal=fl.reduce((s,f)=>s+(f.valor||0),0);
+
+    h+=`<div class="card" id="cc-fix-fabi"><div class="ch" onclick="tc('cc-fix-fabi')"><span class="ct">🔁 Fixas do Cartão</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(ftotal)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">`;
+    fl.forEach(f=>{
+      h+=`<div class="row"><div class="rn"><div class="rl">${esc(f.label)} <span class="badge b-fix">Fixo</span></div></div><div>${bdg('fabi')}</div><div class="rval">${R(f.valor)}</div><div class="ract"><button class="ibtn" onclick="modalEditCFix('fabi','${f.id}')">✏️</button></div></div>`;
+    });
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="ncf_fabi_l" placeholder="Ex: Disney+"></div>
+      <div class="fv"><label>Valor (R$)</label><input type="number" step="0.01" id="ncf_fabi_v" placeholder="0,00"></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addCFix('fabi')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // PARCELADAS FABI
+    let ptotal=0;
+    const allCompras=[];
+    Object.values(S.months).forEach(md=>{
+      (md.cF&&md.cF.cp||[]).forEach(c=>{
+        const v=pval(c,CY,CM);
+        if(v>0)allCompras.push({...c,_v:v});
+      });
+    });
+    allCompras.forEach(c=>ptotal+=c._v);
+
+    h+=`<div class="card" id="cc-par-fabi"><div class="ch" onclick="tc('cc-par-fabi')"><span class="ct">🛍️ Parceladas</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(ptotal)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">`;
+    if(allCompras.length===0)h+=`<div class="note">Nenhuma parcela ativa neste mês.</div>`;
+    allCompras.forEach(c=>{
+      const parc=CY*12+CM-(c.sy*12+c.sm)+1;
+      h+=`<div class="row"><div class="rn"><div class="rl">${esc(c.label)}</div><div class="rs">Parcela ${parc}/${c.n} — total ${R(c.total)}</div></div>${bdg('fabi')}<div class="rval">${R(c._v)}</div><div class="ract"><button class="ibtn" onclick="remCompra('fabi','${c.id}')">✕</button></div></div>`;
+    });
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="ncp_fabi_l" placeholder="Ex: Tênis"></div>
+      <div class="fv"><label>Total (R$)</label><input type="number" step="0.01" id="ncp_fabi_v" placeholder="200,00"></div>
+      <div class="fp"><label>Parcelas</label><input type="number" id="ncp_fabi_n" placeholder="4" min="1" max="72"></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addCompra('fabi')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // VARIÁVEL FABI
+    const vtotal=(cd.vr||[]).reduce((s,v)=>s+(v.valor||0),0);
+    h+=`<div class="card" id="cc-vr-fabi"><div class="ch" onclick="tc('cc-vr-fabi')"><span class="ct">📝 Variáveis da Fatura</span><span style="display:flex;align-items:center;gap:6px"><span class="cv">${R(vtotal)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">`;
+    if((cd.vr||[]).length===0)h+=`<div class="note">Nenhum gasto variável adicionado.</div>`;
+    (cd.vr||[]).forEach((v,i)=>{
+      h+=`<div class="row"><div class="rn"><div class="rl">${esc(v.label)}</div></div>${bdg('fabi')}<div class="rval">${R(v.valor)}</div><div class="ract"><button class="ibtn" onclick="remVar('fabi',${i})">✕</button></div></div>`;
+    });
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="nvr_fabi_l" placeholder="Ex: Restaurante"></div>
+      <div class="fv"><label>Valor (R$)</label><input type="number" step="0.01" id="nvr_fabi_v" placeholder="0,00"></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addVar('fabi')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    // EMPRESTADO FABI
+    const etotal=(cd.em||[]).reduce((s,v)=>s+(v.valor||0),0);
+    h+=`<div class="card" id="cc-em-fabi"><div class="ch" onclick="tc('cc-em-fabi')"><span class="ct" style="opacity:.7">🤝 Emprestado (não conta no subtotal)</span><span style="display:flex;align-items:center;gap:6px"><span class="cv" style="color:var(--text3)">${R(etotal)}</span><span class="caret">▾</span></span></div>
+    <div class="cb">
+    <div class="note">Estes valores NÃO entram no subtotal nem no resumo.</div>`;
+    (cd.em||[]).forEach((v,i)=>{
+      h+=`<div class="row"><div class="rn"><div class="rl">${esc(v.label)}</div></div><div class="rval" style="color:var(--text3)">${R(v.valor)}</div><div class="ract"><button class="ibtn" onclick="remEmp('fabi',${i})">✕</button></div></div>`;
+    });
+    h+=`<div class="addform">
+      <div class="fn"><label>Descrição</label><input type="text" id="nem_fabi_l" placeholder="Ex: Compra Mãe"></div>
+      <div class="fv"><label>Valor (R$)</label><input type="number" step="0.01" id="nem_fabi_v" placeholder="0,00"></div>
+      <div><label>&nbsp;</label><button class="addbtn" onclick="addEmp('fabi')">+ Add</button></div>
+    </div>`;
+    h+=`</div></div>`;
+
+    h+=`<div class="scard">
+      <div class="stitle">💳 Total Cartão Fabi</div>
+      <div class="srow"><span class="sname">Fixas</span><span class="sval">${R(calc.ft)}</span></div>
+      <div class="srow"><span class="sname">Parceladas (este mês)</span><span class="sval">${R(calc.pt)}</span></div>
+      <div class="srow"><span class="sname">Variáveis</span><span class="sval">${R(calc.vt)}</span></div>
+      <div class="subtotal-bar"><span class="lbl">✅ Subtotal</span><span class="vl">${R(calc.subtotal)}</span></div>
+      ${calc.et>0?`<div class="srow" style="margin-top:6px"><span class="sname" style="color:var(--text3)">Emprestado</span><span class="sval" style="color:var(--text3)">${R(calc.et)}</span></div>
+      <div class="total-bar"><span>Total Fatura</span><span class="vl">${R(calc.totalFatura)}</span></div>`:''}
+    </div>`;
+  }
+
+  document.getElementById(who==='gaby'?'t1':'t2').innerHTML=h;
+}
+
+// ── ACTIONS ──────────────────────────────────────────────────────────────────
+function setRenda(f,v){const d=gmd(CY,CM);d[f]=parseFloat(v)||0;save();renderT0();}
+function setOv(id,v){const d=gmd(CY,CM);d.ov[id]=parseFloat(v)||0;save();renderT0();}
+
+function addExG(){
+  const d=gmd(CY,CM);
+  const l=document.getElementById('addExG_l').value.trim();
+  const v=parseFloat(document.getElementById('addExG_v').value)||0;
+  const dc=parseInt(document.getElementById('addExG_d').value)||0;
+  if(!l)return;d.exG.push({id:uid(),label:l,valor:v,venc:dc});save();renderT0();
+}
+function addExF(){
+  const d=gmd(CY,CM);
+  const l=document.getElementById('addExF_l').value.trim();
+  const v=parseFloat(document.getElementById('addExF_v').value)||0;
+  const dc=parseInt(document.getElementById('addExF_d').value)||0;
+  if(!l)return;d.exF.push({id:uid(),label:l,valor:v,venc:dc});save();renderT0();
+}
+function remExG(i){const d=gmd(CY,CM);d.exG.splice(i,1);save();renderT0();}
+function remExF(i){const d=gmd(CY,CM);d.exF.splice(i,1);save();renderT0();}
+
+function addCFix(who){
+  const l=document.getElementById(`ncf_${who}_l`).value.trim();
+  const v=parseFloat(document.getElementById(`ncf_${who}_v`).value)||0;
+  const o=document.getElementById(`ncf_${who}_o`)?document.getElementById(`ncf_${who}_o`).value:(who==='fabi'?'fabi':'gaby');
+  if(!l)return;
+  (who==='gaby'?S.cfixG:S.cfixF).push({id:uid(),label:l,valor:v,owner:o});
+  save();renderCard(who);
+}
+
+function addCompra(who){
+  const l=document.getElementById(`ncp_${who}_l`).value.trim();
+  const v=parseFloat(document.getElementById(`ncp_${who}_v`).value)||0;
+  const n=parseInt(document.getElementById(`ncp_${who}_n`).value)||1;
+  const splitEl=document.getElementById(`ncp_${who}_s`);
+  const split=splitEl?splitEl.value==='1':false;
+  if(!l||!v)return;
+  const d=gmd(CY,CM);
+  const cd=who==='gaby'?d.cG:d.cF;
+  cd.cp.push({id:uid(),label:l,total:v,n,sy:CY,sm:CM,split});
+  save();renderCard(who);
+  if(AT===0)renderT0();
+}
+function remCompra(who,id){
+  Object.values(S.months).forEach(md=>{
+    const cd=who==='gaby'?md.cG:md.cF;
+    if(cd&&cd.cp)cd.cp=cd.cp.filter(c=>c.id!==id);
+  });
+  save();renderCard(who);
+  if(AT===0)renderT0();
+}
+
+function addVar(who){
+  const l=document.getElementById(`nvr_${who}_l`).value.trim();
+  const v=parseFloat(document.getElementById(`nvr_${who}_v`).value)||0;
+  if(!l)return;
+  const d=gmd(CY,CM);
+  (who==='gaby'?d.cG:d.cF).vr.push({id:uid(),label:l,valor:v});
+  save();renderCard(who);
+  if(AT===0)renderT0();
+}
+function remVar(who,i){
+  const d=gmd(CY,CM);(who==='gaby'?d.cG:d.cF).vr.splice(i,1);save();renderCard(who);if(AT===0)renderT0();
+}
+
+function addEmp(who){
+  const l=document.getElementById(`nem_${who}_l`).value.trim();
+  const v=parseFloat(document.getElementById(`nem_${who}_v`).value)||0;
+  if(!l)return;
+  const d=gmd(CY,CM);
+  (who==='gaby'?d.cG:d.cF).em.push({id:uid(),label:l,valor:v});
+  save();renderCard(who);
+}
+function remEmp(who,i){
+  const d=gmd(CY,CM);(who==='gaby'?d.cG:d.cF).em.splice(i,1);save();renderCard(who);
+}
+
+// ── DASHBOARD ANUAL ──────────────────────────────────────────────────────────
+function renderDash(){
+  const year=CY;
+  const months=[];
+  for(let m=0;m<12;m++){
+    const s=calcS(year,m);
+    months.push({m,s,label:MN[m].slice(0,3)});
+  }
+  let h='';
+
+  // Métricas anuais
+  const totalRenda=months.reduce((acc,x)=>acc+x.s.rT,0);
+  const totalGastos=months.reduce((acc,x)=>acc+x.s.tG+x.s.tF+x.s.fCasa,0);
+  const totalSobra=totalRenda-totalGastos;
+  const mediaGastos=totalGastos/12;
+
+  h+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <div style="font-size:15px;font-weight:600">📊 Dashboard ${year}</div>
+  </div>`;
+
+  h+=`<div class="dash-grid">
+    <div class="dash-metric"><div class="dash-mlbl">Renda Total ${year}</div><div class="dash-mval">${R(totalRenda)}</div><div class="dash-msub">Acumulado anual</div></div>
+    <div class="dash-metric"><div class="dash-mlbl">Gastos Totais ${year}</div><div class="dash-mval">${R(totalGastos)}</div><div class="dash-msub">Acumulado anual</div></div>
+    <div class="dash-metric"><div class="dash-mlbl">Sobra Anual</div><div class="dash-mval ${totalSobra>=0?'pos':'neg'}">${R(totalSobra)}</div><div class="dash-msub">Renda − Gastos</div></div>
+    <div class="dash-metric"><div class="dash-mlbl">Média Mensal</div><div class="dash-mval">${R(mediaGastos)}</div><div class="dash-msub">Gastos médios/mês</div></div>
+  </div>`;
+
+  // Gráfico de barras — gastos por mês
+  const maxVal=Math.max(...months.map(x=>x.s.tG+x.s.tF+x.s.fCasa),1);
+  h+=`<div class="dash-chart-wrap">
+    <div class="dash-chart-title">Gastos por Mês — ${year}</div>
+    <div class="bar-chart">`;
+  months.forEach(x=>{
+    const gasto=x.s.tG+x.s.tF+x.s.fCasa;
+    const pct=Math.max((gasto/maxVal)*100,1);
+    const isCurrent=x.m===CM&&year===CY;
+    const color=isCurrent?'var(--blue)':'var(--surface3)';
+    const colorBorder=isCurrent?'var(--blue)':'var(--border2)';
+    const hasData=x.s.rT>0||gasto>0;
+    h+=`<div class="bar-wrap">
+      ${hasData?`<div class="bar-val">${R(gasto).replace('R$ ','')}</div>`:''}
+      <div class="bar" style="height:${pct}%;background:${color};border:1px solid ${colorBorder}" title="${MN[x.m]}: ${R(gasto)}"></div>
+      <div class="bar-label" style="${isCurrent?'font-weight:700;color:var(--blue)':''}">${x.label}</div>
+    </div>`;
+  });
+  h+=`</div></div>`;
+
+  // Tabela comparativa mensal
+  h+=`<div class="dash-chart-wrap">
+    <div class="dash-chart-title">Comparativo Mensal</div>
+    <table class="dash-table">
+      <thead><tr>
+        <th>Mês</th>
+        <th style="text-align:right">Renda</th>
+        <th style="text-align:right">Fixas</th>
+        <th style="text-align:right">Cartão Gaby</th>
+        <th style="text-align:right">Cartão Fabi</th>
+        <th style="text-align:right">Sobra</th>
+      </tr></thead>
+      <tbody>`;
+  months.forEach(x=>{
+    const s=x.s;
+    const isCur=x.m===CM&&year===CY;
+    const gasto=s.tG+s.tF+s.fCasa;
+    const sobra=s.sT;
+    const hasData=s.rT>0||gasto>0;
+    h+=`<tr class="${isCur?'highlight-row':''}" style="${!hasData?'opacity:.4':''}">
+      <td style="font-weight:${isCur?700:400}">${MN[x.m].slice(0,3)}</td>
+      <td class="mono" style="text-align:right">${R(s.rT)}</td>
+      <td class="mono" style="text-align:right">${R(s.fCasa+s.fGaby+s.fFabi)}</td>
+      <td class="mono" style="text-align:right">${R(s.cg.subtotal)}</td>
+      <td class="mono" style="text-align:right">${R(s.cf.subtotal)}</td>
+      <td class="mono ${sobra>=0?'pos':'neg'}" style="text-align:right;font-weight:600">${(sobra<0?'−':'')}${R(sobra)}</td>
+    </tr>`;
+  });
+  // Totais
+  const totFix=months.reduce((a,x)=>a+x.s.fCasa+x.s.fGaby+x.s.fFabi,0);
+  const totCG=months.reduce((a,x)=>a+x.s.cg.subtotal,0);
+  const totCF=months.reduce((a,x)=>a+x.s.cf.subtotal,0);
+  h+=`</tbody><tfoot><tr style="border-top:2px solid var(--border2)">
+    <td style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px">Total</td>
+    <td class="mono" style="text-align:right;font-weight:700">${R(totalRenda)}</td>
+    <td class="mono" style="text-align:right;font-weight:700">${R(totFix)}</td>
+    <td class="mono" style="text-align:right;font-weight:700">${R(totCG)}</td>
+    <td class="mono" style="text-align:right;font-weight:700">${R(totCF)}</td>
+    <td class="mono ${totalSobra>=0?'pos':'neg'}" style="text-align:right;font-weight:700">${(totalSobra<0?'−':'')}${R(totalSobra)}</td>
+  </tr></tfoot>`;
+  h+=`</table></div>`;
+
+  // Detalhamento por mês selecionado
+  const ds=months[CM].s;
+  h+=`<div class="dash-chart-wrap">
+    <div class="dash-row-header">
+      <div class="dash-chart-title" style="margin-bottom:0">Detalhe: ${MN[CM]} ${year}</div>
+      <span style="font-size:11px;color:var(--text3)">Mês atual</span>
+    </div>
+    <div style="height:10px"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:var(--renda-bg);border:1px solid var(--renda-border);border-radius:var(--rs);padding:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--renda-text);margin-bottom:4px">Renda Gaby</div>
+        <div style="font-size:16px;font-weight:600;font-family:'DM Mono',monospace;color:var(--renda-text)">${R(ds.rG)}</div>
+      </div>
+      <div style="background:var(--renda-bg);border:1px solid var(--renda-border);border-radius:var(--rs);padding:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--renda-text);margin-bottom:4px">Renda Fabi</div>
+        <div style="font-size:16px;font-weight:600;font-family:'DM Mono',monospace;color:var(--renda-text)">${R(ds.rF)}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Gastos Gaby</div>
+        <div style="font-size:16px;font-weight:600;font-family:'DM Mono',monospace">${R(ds.tG)}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Gastos Fabi</div>
+        <div style="font-size:16px;font-weight:600;font-family:'DM Mono',monospace">${R(ds.tF)}</div>
+      </div>
+      <div style="background:${ds.sG>=0?'var(--green-bg)':'var(--red-bg)'};border:1px solid ${ds.sG>=0?'var(--green)':'var(--red)'};border-radius:var(--rs);padding:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:${ds.sG>=0?'var(--green)':'var(--red)'};margin-bottom:4px">Sobra Gaby</div>
+        <div style="font-size:16px;font-weight:600;font-family:'DM Mono',monospace;color:${ds.sG>=0?'var(--green)':'var(--red)'}">${(ds.sG<0?'−':'')}${R(ds.sG)}</div>
+      </div>
+      <div style="background:${ds.sF>=0?'var(--green-bg)':'var(--red-bg)'};border:1px solid ${ds.sF>=0?'var(--green)':'var(--red)'};border-radius:var(--rs);padding:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:${ds.sF>=0?'var(--green)':'var(--red)'};margin-bottom:4px">Sobra Fabi</div>
+        <div style="font-size:16px;font-weight:600;font-family:'DM Mono',monospace;color:${ds.sF>=0?'var(--green)':'var(--red)'}">${(ds.sF<0?'−':'')}${R(ds.sF)}</div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('t3').innerHTML=h;
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  document.getElementById('mlabel').textContent=MN[CM]+' '+CY;
+  renderT0();
+  renderCard('gaby');
+  renderCard('fabi');
+  if(AT===3)renderDash();
+}
+
+applyTheme();
+render();
+</script>
+</body>
+</html>
